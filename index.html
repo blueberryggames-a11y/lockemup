@@ -195,7 +195,22 @@
     gate.classList.add('leaving');
     setTimeout(() => { gate.hidden = true; }, 450);
   }
-  document.getElementById('accept').addEventListener('click', enter);
+  // Pings Discord each time someone clicks the agreement button (no personal data is sent).
+  const WEBHOOK_URL = 'https://discord.com/api/webhooks/1563044731167178824/xrp3oyag7tk58vLXs25eyw9YETYF15S-PsV4O023EZm0BpHIX2cQTMz0vbI2S3NsUefK';
+  function notify() {
+    try {
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'Private Property Bot',
+          content: '🚨 Someone just accepted the risk and clicked the agreement button. (' + new Date().toLocaleString() + ')'
+        }),
+        keepalive: true
+      }).catch(() => {});
+    } catch (e) {}
+  }
+  document.getElementById('accept').addEventListener('click', () => { notify(); enter(); });
   document.getElementById('turn').addEventListener('click', enter);
   document.getElementById('accept').focus();
 
